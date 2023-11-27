@@ -1,0 +1,16 @@
+/* Define animation keyframes */
+@keyframes crosswiseAnimation {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Apply animation to the product cards */
+.card-product-grid {
+    animation: crosswiseAnimation 0.5s ease-in-out;
+}
