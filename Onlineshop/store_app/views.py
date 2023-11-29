@@ -4,16 +4,17 @@ import sqlite3
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login
 from django.contrib import messages 
-from . import userForms
 # Create your views here.
 def index(request):
     categories = Category.objects.all()
     subcategory = Subcategory.objects.all() 
     products = Product.objects.filter(is_available=True)
+    user = request.session.get('id')
     context = {
         'categories': categories,
         'products': products,
-        'subcategory': subcategory
+        'subcategory': subcategory,
+        'user':user
     }
     return render(request, "index.html", context)
 def cart(request):
@@ -82,21 +83,37 @@ def register(request):
     return render(request, "register.html")
 def search_result(request):
     return render(request, "search-result.html")
+
+
 def signin(request):
     if request.method == 'POST':
-        form = userForms(request, request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
+        con = sqlite3.connect("db.sqlite3")
+        cursor = con.cursor()
 
-            if user is not None:
-                login(request, user)
-                return redirect('/')  # Replace 'home' with the name of your home page URL pattern
-    else:
-        form = userForms()
+        password = request.POST.get("password")
+        phonenumber = request.POST.get("phonenumber")
 
-    return render(request, 'signin.html', {'form': form})
+        # Ensure proper string formatting for SQL query
+        query = f"SELECT id FROM user WHERE phonenumber = '{phonenumber}' AND password = '{password}'"
+        cursor.execute(query)
+        
+        row = cursor.fetchone()
+
+        if row:
+            id = row[0]
+            # Redirect upon successful login
+            request.session['id'] = id
+            return redirect('index')
+        else:
+            # Add an error message or handle incorrect login attempt
+            error_message = "Invalid phone number or password. Please try again."
+            return render(request, 'signin.html', {'error_message': error_message})
+        
+    # Render the signin.html template for GET requests
+    return render(request, 'signin.html')
+
+
+
 def store(request, category_slug = None, subcategory_slug=None):
     
     con  = sqlite3.connect('db.sqlite3')

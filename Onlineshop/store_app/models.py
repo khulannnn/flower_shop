@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 # Create your models here.
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True)
@@ -38,10 +38,28 @@ class Usertype(models.Model):
         return self.usertypename
     class Meta:
         db_table = 'usertype'
+class CustomUserManager(BaseUserManager):
+    def create_user(self, username, phone_number, password=None, **extra_fields):
+        if not phone_number:
+            raise ValueError('The Phone Number field must be set')
+        user = self.model(
+            username=username,
+            phone_number=phone_number,
+            **extra_fields
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, phone_number, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(username, phone_number, password, **extra_fields)
 class User(models.Model):
     username = models.CharField(max_length=50, unique=True)
-    firstname = models.CharField(max_length=50, unique=True)
-    lastname = models.CharField(max_length=50, unique=True)
+    firstname = models.CharField(max_length=50, unique=False)
+    lastname = models.CharField(max_length=50, unique=False)
     phonenumber = models.IntegerField(max_length=50, unique=True)
     email = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50, unique=False) 
