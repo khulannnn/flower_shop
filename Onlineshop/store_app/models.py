@@ -32,7 +32,24 @@ class Subcategory(models.Model):
     def __str__ (self):
         return self.subcategory_name
 
-
+class Usertype(models.Model):
+    usertypename = models.CharField(max_length=50, unique=True)
+    def __str__ (self):
+        return self.usertypename
+    class Meta:
+        db_table = 'usertype'
+class User(models.Model):
+    username = models.CharField(max_length=50, unique=True)
+    firstname = models.CharField(max_length=50, unique=True)
+    lastname = models.CharField(max_length=50, unique=True)
+    phonenumber = models.IntegerField(max_length=50, unique=True)
+    email = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=50, unique=False) 
+    usertypeid =  models.ForeignKey(Usertype, on_delete=models.CASCADE)
+    def __str__ (self):
+        return self.username
+    class Meta:
+        db_table = 'user'
 
 
 # class Cart_item(models.Model):

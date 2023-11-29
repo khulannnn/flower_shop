@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Category, Product, Subcategory
+from .models import Category, Product, Subcategory, User
 import sqlite3
 from django.core.paginator import Paginator
+from django.contrib.auth import authenticate, login
+from django.contrib import messages 
+from . import userForms
 # Create your views here.
 def index(request):
     categories = Category.objects.all()
@@ -80,7 +83,20 @@ def register(request):
 def search_result(request):
     return render(request, "search-result.html")
 def signin(request):
-    return render(request, "signin.html")
+    if request.method == 'POST':
+        form = userForms(request, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect('/')  # Replace 'home' with the name of your home page URL pattern
+    else:
+        form = userForms()
+
+    return render(request, 'signin.html', {'form': form})
 def store(request, category_slug = None, subcategory_slug=None):
     
     con  = sqlite3.connect('db.sqlite3')
