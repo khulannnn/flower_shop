@@ -14,9 +14,9 @@
 <table class="table table-borderless table-shopping-cart">
 <thead class="text-muted">
 <tr class="small text-uppercase">
-  <th scope="col">Product</th>
-  <th scope="col" width="120">Quantity</th>
-  <th scope="col" width="120">Price</th>
+  <th scope="col">Бараа</th>
+  <th scope="col" width="120">Тоо ширхэг</th>
+  <th scope="col" width="120">Үнэ</th>
   <th scope="col" class="text-right" width="200"> </th>
 </tr>
 </thead>
@@ -28,7 +28,7 @@
 			<div class="aside"><img src="{{img}}" class="img-sm"></div>
 			<figcaption class="info">
 				<a href="#" class="title text-dark">{{name}}</a>
-				<p class="text-muted small">Color: {{color}} <br> Size: {{size}}</p>
+				<p class="text-muted small">Өнгө: {{color}} <br> Хэмжээ: {{size}}</p>
 			</figcaption>
 		</figure>
 	</td>
@@ -37,11 +37,11 @@
 					<div class="col"> 
 						<div class="input-group input-spinner">
 							<div class="input-group-prepend">
-							<button class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </button>
+							<button class="btn btn-light" type="button" id="button-plus" onclick="plus()"> <i class="fa fa-minus"></i> </button>
 							</div>
-							<input type="text" class="form-control"  value="1">
+							<input type="text" class="form-control" id="num" value="1">
 							<div class="input-group-append">
-							<button class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
+							<button class="btn btn-light" type="button" id="button-minus" onclick="minus()"> <i class="fa fa-plus"></i> </button>
 							</div>
 						</div> <!-- input-group.// -->
 					</div> <!-- col.// -->
@@ -53,7 +53,10 @@
 		</div> <!-- price-wrap .// -->
 	</td>
 	<td class="text-right"> 
-	<button href="" class="btn btn-danger" onclick="buton()"> Remove</button>
+		<form method="post">
+		{%csrf_token%}
+	<button type="submit" class="btn btn-danger"> Устгах</button>
+	</form>
 	</td>
 </tr>
 
@@ -67,23 +70,23 @@
 		<div class="card">
 		<div class="card-body">
 			<dl class="dlist-align">
-			  <dt>Total price:</dt>
+			  <dt>Нийт үнэ:</dt>
 			  <dd class="text-right">$69.97</dd>
 			</dl>
 			<dl class="dlist-align">
-			  <dt>Tax:</dt>
+			  <dt>Хөнгөлөлт:</dt>
 			  <dd class="text-right"> $10.00</dd>
 			</dl>
 			<dl class="dlist-align">
-			  <dt>Total:</dt>
+			  <dt>Нийт:</dt>
 			  <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
 			</dl>
 			<hr>
 			<p class="text-center mb-3">
 				<img src="{% static 'images/misc/payments.png' %}" height="26">
 			</p>
-			<a href="/place_order" class="btn btn-primary btn-block"> Checkout </a>
-			<a href="/store" class="btn btn-light btn-block">Continue Shopping</a>
+			<a href="/place_order" class="btn btn-primary btn-block"> Тооцоо хийх </a>
+			<a href="/store" class="btn btn-light btn-block">Худалдан авалтаа үргэлжлүүлэх</a>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
@@ -96,9 +99,20 @@
 </div> <!-- container .//  -->
 </section>
 <script>
-	function buton(){
-		document.getElementById("buton").style.display="none";	
-	}
+
+	function plus() {
+        let x = parseInt(document.getElementById("num").value);
+		if (x > 1) {
+        document.getElementById("num").value = x - 1;
+		}
+    }
+
+    function minus() {
+        let x = parseInt(document.getElementById("num").value);
+        
+            document.getElementById("num").value = x + 1;
+    }
 </script>
+
 <!-- ========================= SECTION CONTENT END// ========================= -->
 {% endblock %}

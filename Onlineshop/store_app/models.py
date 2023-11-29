@@ -30,7 +30,7 @@ class Subcategory(models.Model):
     description = models.TextField(max_length=255, blank=True)
     cat_image = models.ImageField(upload_to='photos/subcategory', blank=True)
     def __str__ (self):
-        return self.category_name
+        return self.subcategory_name
 
 
 

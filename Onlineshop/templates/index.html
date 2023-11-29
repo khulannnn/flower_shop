@@ -22,9 +22,10 @@
         </header><!-- sect-heading -->
         
             
-        <div style="overflow-x: auto; white-space: nowrap;">
+        <div id="productsContainer" style="overflow-x: hidden; white-space: nowrap; position: relative;">
+            <div id="productItems" style="display: flex;">
     {% for product in products %}
-    <div class="col-md-3" style="display: inline-block;">
+    <div class="col-md-3" style="flex: 0 0 auto;">
         <div class="card card-product-grid">
             <a href="/product_detail/{{ product.slug }}/" class="img-wrap">
                 <img src="{{ product.images.url }}">
@@ -36,9 +37,55 @@
         </div>
     </div> <!-- col.// -->
     {% endfor %}
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="previousProducts()" style="width: 20px;height: 20px; border-radius: 50%;"></button>
+                <button onclick="nextProducts()" style="width: 20px;height: 20px; border-radius: 50%;"></button>
+            </div>
 </div>
  <!-- row.// -->
-    
+    <script>
+        let currentPosition = 0;
+        let slideInterval;
+const productContainer = document.getElementById('productsContainer');
+const productItems = document.getElementById('productItems');
+
+function previousProducts() {
+    currentPosition += 300; // Adjust this value based on your product card width
+    if (currentPosition > 0) {
+        currentPosition = -((productItems.childElementCount - 4) * 300); // Adjust the number of visible items (here, 4) and the scroll distance accordingly
+    }
+    productItems.style.transition = 'transform 0.5s ease-in-out';
+    productItems.style.transform = `translateX(${currentPosition}px)`;
+}
+
+function nextProducts() {
+    const containerWidth = productContainer.clientWidth;
+    const totalWidth = productItems.scrollWidth;
+    if (containerWidth < totalWidth + currentPosition) {
+        currentPosition -= 300; // Adjust this value based on your product card width
+        productItems.style.transition = 'transform 0.5s ease-in-out';
+        productItems.style.transform = `translateX(${currentPosition}px)`;
+    }else {
+        currentPosition = 0;
+        productItems.style.transition = 'transform 0.5s ease-in-out';
+        productItems.style.transform = `translateX(${currentPosition}px)`;
+    }
+}
+function startSliding() {
+    slideInterval = setInterval(nextProducts, 3000); // Change the interval time (in milliseconds) as needed
+}
+
+function pauseSliding() {
+    clearInterval(slideInterval);
+}
+// Automatic sliding effect
+startSliding();
+
+productContainer.addEventListener('mouseenter', pauseSliding);
+productContainer.addEventListener('mouseleave', startSliding);
+
+    </script>
     </div><!-- container // -->
     </section>
 {% endblock %}

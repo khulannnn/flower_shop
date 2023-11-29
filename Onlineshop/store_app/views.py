@@ -1,20 +1,26 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Category, Product
+from .models import Category, Product, Subcategory
 import sqlite3
+from django.core.paginator import Paginator
 # Create your views here.
 def index(request):
     categories = Category.objects.all()
+    subcategory = Subcategory.objects.all() 
     products = Product.objects.filter(is_available=True)
     context = {
         'categories': categories,
         'products': products,
+        'subcategory': subcategory
     }
     return render(request, "index.html", context)
 def cart(request):
-
+    context = {}
     cart_product = request.session.get('cart')
     context = cart_product
     print(cart_product)
+
+    if request.method == 'POST':
+        context = {}
     return render(request, "cart.html",context=context)
 def base(request):
     return render(request, "base.html")
@@ -43,9 +49,18 @@ def product_detail(request, product_slug):
             'name':name,
             'price':price,
             'color':color,
-            'size':size
+            'size':size,
+            'img':img
         }
         
+        request.session['cart'] = {
+            'name':name,
+            'price':price,
+            'color':color,
+            'size':size,
+            'product': product.id,
+            'img':img
+        }
 
             # addcart darahad ene ajilah ystoi 
         # new = Cart_item(userid = )
@@ -66,7 +81,7 @@ def search_result(request):
     return render(request, "search-result.html")
 def signin(request):
     return render(request, "signin.html")
-def store(request, category_slug = None):
+def store(request, category_slug = None, subcategory_slug=None):
     
     con  = sqlite3.connect('db.sqlite3')
     cur = con.cursor()
@@ -75,23 +90,26 @@ def store(request, category_slug = None):
     print(row)
     size = len(row)
     # Fetch all products that are available
-    categories = None
-    products = None
-    if category_slug != None:
-        categories = get_object_or_404(Category, slug=category_slug)
-        products = Product.objects.filter(category = categories)
-        count=products.count()
-    elif category_slug is None:
-        products = Product.objects.filter(is_available = True)
-        count=products.count()
-    else:
-        categories = Category.objects.all()
-        products = Product.objects.filter(category = categories)
-        count=products.count()
+    categories = Category.objects.all()
+    subcategories = Subcategory.objects.all()
+    products = Product.objects.filter(is_available=True)
+
+    if category_slug is not None:
+        category = get_object_or_404(Category, slug=category_slug)
+        products = products.filter(category=category)
+        if subcategory_slug is not None:
+            subcategory = get_object_or_404(Subcategory, slug=subcategory_slug)
+            products = products.filter(subcategory=subcategory)
+
+    all_products = Product.objects.all()
+    paginator = Paginator(all_products, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'products': products,
+        'products': page_obj,
         'categories': categories,
-        'count': count
+        'subcategories': subcategories,
     }
     return render(request, "store/store.html", context)
 def home(request):
@@ -110,4 +128,3 @@ def home(request):
         'size': size,
     }
     return render(request, "home.html", context)
-

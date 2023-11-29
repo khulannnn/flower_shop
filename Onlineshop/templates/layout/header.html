@@ -39,13 +39,9 @@ $(document).ready(function() {
 }); 
 // jquery end
 </script>
-<style>
-
-</style>
 
 </head>
 <body>
-
 
 <header class="section-header" style="color:white">
 
@@ -75,13 +71,17 @@ $(document).ready(function() {
 				Нэмэлт бэлэг 
 			</button>
 			<div class="dropdown-menu">
-				{% for category in links %}
-				<a class="dropdown-item" href="{% url 'store' category.slug %}">{{ category.category_name | upper}}</a>
+				{% for subcategory in links %}
+				<a class="dropdown-item" href="{% url 'store' subcategory.slug %}">{{ subcategory.subcategory_name | upper}}</a>
 				{%endfor%}	
 			</div>
 		</div>  <!-- category-wrap.// -->
 	</div> <!-- col.// -->
-	<a href="/store" class="btn btn-outline-primary" style="border:1px solid #F397AF; color:#F397AF">Бараа</a>
+	<a href="/store" class="btn btn-outline-primary" style="border: 1px solid #F397AF; color: #F397AF; text-decoration: none;"
+   onmouseover="this.style.color='#fff'"
+   onmouseout="this.style.color='#F397AF'">
+    Бараа
+</a>
 	<div class="col-lg  col-md-6 col-sm-12 col">
 		<form action="#" class="search">
 			<div class="input-group w-100">
