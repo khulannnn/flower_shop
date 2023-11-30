@@ -4,6 +4,7 @@ import sqlite3
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login
 from django.contrib import messages 
+from django.http import HttpResponse
 # Create your views here.
 def index(request):
     categories = Category.objects.all()
@@ -33,7 +34,10 @@ def dashboard(request):
 def order_complete(request):
     return render(request, "order_complete.html")
 def place_order(request):
-    return render(request, "place-order.html")
+    context = {}
+    cart_product = request.session.get('cart')
+    context = cart_product
+    return render(request, "place-order.html",context=context)
 def product_detail(request, product_slug):
     product = get_object_or_404(Product, slug=product_slug)
     num = 0
@@ -80,18 +84,48 @@ def product_detail(request, product_slug):
 
     return render(request, "product-detail.html", context)
 def register(request):
+    if request.method == 'POST':
+        try:
+
+            phonenumber = request.POST.get("phonenumber")
+            firstname = request.POST.get("firstname")
+            lastname = request.POST.get("lastname")
+            password = request.POST.get("password")
+            email = request.POST.get("email")
+
+            if not all([phonenumber, firstname, lastname, password, email]):
+                return render(request, "register.html", {'error_message': 'Please fill in all fields.'})
+
+            con = sqlite3.connect('db.sqlite3')
+            cur = con.cursor()
+
+            # Check if the email already exists
+            cur.execute(f"SELECT id FROM user WHERE email = ? AND phonenumber = ?", (email, phonenumber))
+            existing_user = cur.fetchone()
+
+            if existing_user:
+                return render(request, "register.html", {'error_message': 'Email already in use. Please choose a different email.'})
+
+            # Proceed with insertion
+            cur.execute("""INSERT INTO user (firstname, lastname, phonenumber, email, password, usertypeid_id)
+                        VALUES (?, ?, ?, ?, ?, 2)""", (firstname, lastname, phonenumber, email, password))
+            con.commit()
+        finally:
+            con.close()
+            return redirect('signin')
+        
     return render(request, "register.html")
+    
 def search_result(request):
     return render(request, "search-result.html")
-
 
 def signin(request):
     if request.method == 'POST':
         con = sqlite3.connect("db.sqlite3")
         cursor = con.cursor()
-
-        password = request.POST.get("password")
         phonenumber = request.POST.get("phonenumber")
+        password = request.POST.get("password")
+        
 
         # Ensure proper string formatting for SQL query
         query = f"SELECT id FROM user WHERE phonenumber = '{phonenumber}' AND password = '{password}'"

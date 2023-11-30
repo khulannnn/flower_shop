@@ -2,125 +2,88 @@
 {%load static%}
 <section class="section-content padding-y bg">
 <div class="container">
-
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!-- ============================ COMPONENT 2 ================================= -->
 <div class="row">
 		<main class="col-md-8">
 
-<article class="card mb-4">
-<div class="card-body">
-	<h4 class="card-title mb-4">Сагс</h4>
-	<div class="row">
-		<div class="col-md-6">
-			<figure class="itemside  mb-4">
-				<div class="aside"><img src="{% static 'images/items/1.jpg' %}" class="border img-sm"></div>
-				<figcaption class="info">
-					<p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-					<span class="text-muted">2x = $560 </span>
-				</figcaption>
-			</figure>
-		</div> <!-- col.// -->
-		<div class="col-md-6">
-			<figure class="itemside  mb-4">
-				<div class="aside"><img src="{% static 'images/items/2.jpg' %}" class="border img-sm"></div>
-				<figcaption class="info">
-					<p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-					<span class="text-muted">2x = $560 </span>
-				</figcaption>
-			</figure>
-		</div> <!-- col.// -->
-		<div class="col-md-6">
-			<figure class="itemside mb-4">
-				<div class="aside"><img src="{% static 'images/items/3.jpg' %}" class="border img-sm"></div>
-				<figcaption class="info">
-					<p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-					<span class="text-muted">2x = $560 </span>
-				</figcaption>
-			</figure>
-		</div> <!-- col.// -->
-		<div class="col-md-6">
-			<figure class="itemside  mb-4">
-				<div class="aside"><img src="{% static 'images/items/4.jpg' %}" class="border img-sm"></div>
-				<figcaption class="info">
-					<p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-					<span class="text-muted">2x = $560 </span>
-				</figcaption>
-			</figure>
-		</div> <!-- col.// -->
-	</div> <!-- row.// -->
-</div> <!-- card-body.// -->
-</article> <!-- card.// -->
+			<div class="card">
+				<table class="table table-borderless table-shopping-cart">
+				<thead class="text-muted">
+				<tr class="small text-uppercase">
+				  <th scope="col">Бараа</th>
+				  <th scope="col" width="120">Тоо ширхэг</th>
+				  <th scope="col" width="120">Үнэ</th>
+				  <th scope="col" class="text-right" width="200"></th>
+				</tr>
+				</thead>
+				<tbody>
+					
+				<tr id="buton">
+					<td>
+						<figure class="itemside align-items-center">
+							<div class="aside"><img src="{{img}}" class="img-sm"></div>
+							<figcaption class="info">
+								<a href="#" class="title text-dark">{{name}}</a>
+								<p class="text-muted small">Өнгө: {{color}} <br> Хэмжээ: {{size}}</p>
+							</figcaption>
+						</figure>
+					</td>
+					<td> 
+						<!-- col.// -->
+									<div class="col"> 
+										<div class="input-group input-spinner">
+											<div class="input-group-prepend">
+											<button class="btn btn-light" type="button" id="button-plus" onclick="plus()"> <i class="fa fa-minus"></i> </button>
+											</div>
+											<input type="text" class="form-control" id="num" value="1">
+											<div class="input-group-append">
+											<button class="btn btn-light" type="button" id="button-minus" onclick="minus()"> <i class="fa fa-plus"></i> </button>
+											</div>
+										</div> <!-- input-group.// -->
+									</div> <!-- col.// -->
+					</td>
+					<td> 
+						<div class="price-wrap"> 
+							<var class="price">{{price}}₮</var> 
+							<!-- <small class="text-muted"> $315.20 each </small>  -->
+						</div> <!-- price-wrap .// -->
+					</td>
+					<td class="text-right"> 
+						<form method="post">
+						{%csrf_token%}
+						<button type="submit" class="btn btn-danger" style="background-color:#2c3333; color:#F397AF;border:1px solid #F397AF"> <i class="fa fa-trash-o"></i></button>
+					</form>
+					</td>
+				</tr>
+				
+				</tbody>
+				</table>
+				</div> <!-- card.// -->
 
 
 <article class="card mb-4">
 <div class="card-body">
-	<h4 class="card-title mb-4">Contact info</h4>
+	<h4 class="card-title mb-4">Хүргүүлэх хаяг</h4>
 	<form action="">
 		<div class="row">
 			<div class="form-group col-sm-6">
-				<label>Frst name</label>
-				<input type="text" placeholder="Type here" class="form-control">
+				<label>Хүлээн авагчийн нэр</label>
+				<input type="text" placeholder="Хүлээн авагчийн нэр" class="form-control">
 			</div>
 			<div class="form-group col-sm-6">
-				<label>Last name</label>
-				<input type="text" placeholder="Type here" class="form-control">
+				<label>Захиалгчийн нэр</label>
+				<input type="text" placeholder="Захиалагчийн нэр" class="form-control">
 			</div>
 			<div class="form-group col-sm-6">
-				<label>Phone</label>
-				<input type="text" value="+998" class="form-control">
+				<label>Утасны дугаар</label>
+				<input type="text" value="утасны дугаараа бичнэ үү?" class="form-control">
 			</div>
 			<div class="form-group col-sm-6">
-				<label>Email</label>
-				<input type="email" placeholder="example@gmail.com" class="form-control">
+				<label>Гэрийн хаяг</label>
+				<input type="text" placeholder="гэрийн хаягаа бичнэ үү?" class="form-control">
 			</div>
-		</div> <!-- row.// -->	
-	</form>
-</div> <!-- card-body.// -->
-</article> <!-- card.// -->
-
-
-<article class="card mb-4">
-<div class="card-body">
-	<h4 class="card-title mb-4">Delivery info</h4>
-	<form action="">
-			
-
-		<div class="row">
-				<div class="form-group col-sm-6">
-					<label>Country*</label>
-					<select name="" class="form-control">
-						<option value="">India</option>
-						<option value="">United States</option>
-						<option value="">France</option>
-						<option value="">Italy</option>
-					</select>
-				</div>
-				<div class="form-group col-sm-6">
-					<label>State*</label>
-					<input type="text" placeholder="Type here" class="form-control">
-				</div>
-				<div class="form-group col-sm-8">
-					<label>Street*</label>
-					<input type="text" placeholder="Type here" class="form-control">
-				</div>
-				<div class="form-group col-sm-4">
-					<label>Building</label>
-					<input type="text" placeholder="" class="form-control">
-				</div>
-				<div class="form-group col-sm-4">
-					<label>House</label>
-					<input type="text" placeholder="Type here" class="form-control">
-				</div>
-				<div class="form-group col-sm-4">
-					<label>Postal code</label>
-					<input type="text" placeholder="" class="form-control">
-				</div>
-				<div class="form-group col-sm-4">
-					<label>Zip</label>
-					<input type="text" placeholder="" class="form-control">
-				</div>
 		</div> <!-- row.// -->	
 	</form>
 </div> <!-- card-body.// -->
@@ -130,43 +93,21 @@
 <article class="accordion" id="accordion_pay">
 	<div class="card">
 		<header class="card-header">
-			<img src="{% static 'images/misc/payment-paypal.png' %}" class="float-right" height="24"> 
 			<label class="form-check collapsed" data-toggle="collapse" data-target="#pay_paynet">
 				<input class="form-check-input" name="payment-option" checked type="radio" value="option2">
 				<h6 class="form-check-label"> 
-					Paypal 
+					QPAY
 				</h6>
 			</label>
 		</header>
 		<div id="pay_paynet" class="collapse show" data-parent="#accordion_pay">
 		<div class="card-body">
-			<p class="text-center text-muted">Connect your PayPal account and use it to pay your bills. You'll be redirected to PayPal to add your billing information.</p>
-			<p class="text-center">
-				<a href="#"><img src="{% static 'images/misc/btn-paypal.png' %}" height="32"></a>
-				<br><br>
+			<p class="text-center text-muted">
+				<img src="{% static 'images/misc/qr.png' %}">
 			</p>
+			Таны төлбөр баталгаажсаны дараа бид таньд мэдэгдэх болно.
 		</div> <!-- card body .// -->
 		</div> <!-- collapse .// -->
-	</div> <!-- card.// -->
-	<div class="card">
-	<header class="card-header">
-		<img src="./images/misc/payment-card.png" class="float-right" height="24">  
-		<label class="form-check" data-toggle="collapse" data-target="#pay_payme">
-			<input class="form-check-input" name="payment-option" type="radio" value="option2">
-			<h6 class="form-check-label"> Credit Card  </h6>
-		</label>
-	</header>
-	<div id="pay_payme" class="collapse" data-parent="#accordion_pay">
-		<div class="card-body">
-			<p class="alert alert-success">Some information or instruction</p>
-			<form class="form-inline">
-				<input type="text" class="form-control mr-2" placeholder="xxxx-xxxx-xxxx-xxxx" name="">
-				<input type="text" class="form-control mr-2" style="width: 100px"  placeholder="dd/yy" name="">
-				<input type="number" maxlength="3" class="form-control mr-2"  style="width: 100px"  placeholder="cvc" name="">
-				<button class="btn btn btn-success">Button</button>
-			</form>
-		</div> <!-- card body .// -->
-	</div> <!-- collapse .// -->
 	</div> <!-- card.// -->
 	
 </article> 
@@ -178,20 +119,17 @@
 		<div class="card-body">
 			<dl class="dlist-align">
 			  <dt>Нийт үнэ:</dt>
-			  <dd class="text-right">$69.97</dd>
+			  <dd class="text-right">200000₮</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Хөнгөлөлт:</dt>
-			  <dd class="text-right"> $10.00</dd>
+			  <dd class="text-right"> 100000₮</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Нийт:</dt>
-			  <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
+			  <dd class="text-right text-dark b"><strong>985200₮</strong></dd>
 			</dl>
 			<hr>
-			<p class="text-center mb-3">
-				<img src="{% static 'images/misc/payments.png' %}" height="26">
-			</p>
 			<a href="/place_order" class="btn btn-primary btn-block"> Захиалга өгөх </a>
 			
 		</div> <!-- card-body.// -->

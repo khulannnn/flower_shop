@@ -2,6 +2,7 @@
 {% load static %}
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <section class="section-content padding-y bg">
 <div class="container">
@@ -48,14 +49,14 @@
 	</td>
 	<td> 
 		<div class="price-wrap"> 
-			<var class="price">${{price}}</var> 
+			<var class="price">{{price}}₮</var> 
 			<!-- <small class="text-muted"> $315.20 each </small>  -->
 		</div> <!-- price-wrap .// -->
 	</td>
 	<td class="text-right"> 
 		<form method="post">
 		{%csrf_token%}
-	<button type="submit" class="btn btn-danger"> Устгах</button>
+	<button type="submit" class="btn btn-danger" style="background-color:#2c3333; color:#F397AF;border:1px solid #F397AF"> <i class="fa fa-trash-o"></i></button>
 	</form>
 	</td>
 </tr>
@@ -70,21 +71,18 @@
 		<div class="card">
 		<div class="card-body">
 			<dl class="dlist-align">
-			  <dt>Нийт үнэ:</dt>
-			  <dd class="text-right">$69.97</dd>
-			</dl>
-			<dl class="dlist-align">
-			  <dt>Хөнгөлөлт:</dt>
-			  <dd class="text-right"> $10.00</dd>
-			</dl>
-			<dl class="dlist-align">
-			  <dt>Нийт:</dt>
-			  <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
-			</dl>
-			<hr>
-			<p class="text-center mb-3">
-				<img src="{% static 'images/misc/payments.png' %}" height="26">
-			</p>
+				<dt>Нийт үнэ:</dt>
+				<dd class="text-right">200000₮</dd>
+			  </dl>
+			  <dl class="dlist-align">
+				<dt>Хөнгөлөлт:</dt>
+				<dd class="text-right"> 100000₮</dd>
+			  </dl>
+			  <dl class="dlist-align">
+				<dt>Нийт:</dt>
+				<dd class="text-right text-dark b"><strong>985200₮</strong></dd>
+			  </dl>
+			  <hr>
 			<a href="/place_order" class="btn btn-primary btn-block"> Тооцоо хийх </a>
 			<a href="/store" class="btn btn-light btn-block">Худалдан авалтаа үргэлжлүүлэх</a>
 		</div> <!-- card-body.// -->

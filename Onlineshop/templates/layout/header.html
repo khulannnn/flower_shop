@@ -71,7 +71,7 @@ $(document).ready(function() {
 				Нэмэлт бэлэг 
 			</button>
 			<div class="dropdown-menu">
-				{% for subcategory in links %}
+				{% for subcategory in sublinks %}
 				<a class="dropdown-item" href="{% url 'store' subcategory.slug %}">{{ subcategory.subcategory_name | upper}}</a>
 				{%endfor%}	
 			</div>
