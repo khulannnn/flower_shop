@@ -159,25 +159,32 @@ def store(request, category_slug = None, subcategory_slug=None):
     # Fetch all products that are available
     categories = Category.objects.all()
     subcategories = Subcategory.objects.all()
+    search = request.GET.get('search')
     products = Product.objects.filter(is_available=True)
 
     if category_slug is not None:
         try:
-            cat = Category.objects.get(foo='bar')
+            cat = Category.objects.get(slug=category_slug)
+            products = products.filter(category=cat)
         except Category.DoesNotExist:
-            cat = Subcategory.objects.get(foo='bar')
-        category = get_object_or_404(Category, slug=category_slug)
-        products = products.filter(category=category)
-        if subcategory_slug is not None:
-            subcategory = get_object_or_404(Subcategory, slug=subcategory_slug)
-            products = products.filter(subcategory=subcategory)
+            cat = Subcategory.objects.get(slug=category_slug)
+            products = products.filter(subcategory=cat)
+        # category = get_object_or_404(Category, slug=category_slug)
+        # products = products.filter(category=category)
+        # if subcategory_slug is not None:
+        #     subcategory = get_object_or_404(Subcategory, slug=subcategory_slug)
+        #     products = products.filter(subcategory=subcategory)
+            
+    if search is not None:
+        products = products.filter(product_name__contains=search)
 
-    all_products = Product.objects.all()
+    all_products = products
     paginator = Paginator(all_products, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {
+        'search': search,
         'products': page_obj,
         'categories': categories,
         'subcategories': subcategories,

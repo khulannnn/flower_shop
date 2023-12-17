@@ -59,7 +59,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, phone_number, password, **extra_fields)
 class User(models.Model):
     username = models.CharField(max_length=50, unique=True)
-    phonenumber = models.IntegerField(max_length=50, unique=True)
+    phonenumber = models.IntegerField(unique=True)
     email = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50, unique=False) 
     usertypeid =  models.ForeignKey(Usertype, on_delete=models.CASCADE)
