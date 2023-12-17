@@ -162,6 +162,10 @@ def store(request, category_slug = None, subcategory_slug=None):
     products = Product.objects.filter(is_available=True)
 
     if category_slug is not None:
+        try:
+            cat = Category.objects.get(foo='bar')
+        except Category.DoesNotExist:
+            cat = Subcategory.objects.get(foo='bar')
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
         if subcategory_slug is not None:

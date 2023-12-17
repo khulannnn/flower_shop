@@ -9,6 +9,14 @@ class Category(models.Model):
     def __str__ (self):
         return self.category_name
 
+class Subcategory(models.Model):
+    subcategory_name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
+    description = models.TextField(max_length=255, blank=True)
+    cat_image = models.ImageField(upload_to='photos/subcategory', blank=True)
+    def __str__ (self):
+        return self.subcategory_name
+
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -18,19 +26,12 @@ class Product(models.Model):
     stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__ (self):
         return self.product_name
-
-class Subcategory(models.Model):
-    subcategory_name = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(max_length=100, unique=True)
-    description = models.TextField(max_length=255, blank=True)
-    cat_image = models.ImageField(upload_to='photos/subcategory', blank=True)
-    def __str__ (self):
-        return self.subcategory_name
 
 class Usertype(models.Model):
     usertypename = models.CharField(max_length=50, unique=True)
@@ -58,8 +59,6 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, phone_number, password, **extra_fields)
 class User(models.Model):
     username = models.CharField(max_length=50, unique=True)
-    firstname = models.CharField(max_length=50, unique=False)
-    lastname = models.CharField(max_length=50, unique=False)
     phonenumber = models.IntegerField(max_length=50, unique=True)
     email = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50, unique=False) 
