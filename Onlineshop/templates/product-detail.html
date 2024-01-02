@@ -61,7 +61,7 @@
 		</div>
 	</div> <!-- row.// -->
 	<hr>
-		<button type="submit" class="btn btn-primary"><span class="text">Сагсанд хийх</span> <i class="fas fa-shopping-cart"></i></button>
+		<button type="button" onclick="addCart()" class="btn btn-primary"><span class="text">Сагсанд хийх</span> <i class="fas fa-shopping-cart"></i></button>
 	</form>
   </a>
 </article> <!-- product-info-aside .// -->
@@ -108,6 +108,37 @@
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
 
+<script>
+	function addCart() {
+		let cartItems = localStorage.getItem("cart");
+
+		console.log(JSON.parse(cartItems));
+
+		let data = {
+			product_name: "{{ product.product_name }}",
+			price: parseFloat("{{ product.price }}"),
+			image: "{{product.images.url}}",
+			count: 1
+		}
+
+		if (!cartItems) cartItems = [];
+		else cartItems = JSON.parse(cartItems);
+
+		let found = false;
+
+		cartItems.map(item => {
+			if (item.product_name == data.product_name) {
+				found = true;
+
+				item.count ++;
+			}
+		});
+
+		if (!found) cartItems.push(data);
+
+		localStorage.setItem('cart', JSON.stringify(cartItems));
+	}
+</script>
 
 </html>
 {%endblock%}

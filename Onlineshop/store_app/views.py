@@ -102,7 +102,7 @@ def register(request):
             # Check if the email already exists
             cur.execute(f"SELECT id FROM user WHERE email = ? AND phonenumber = ?", (email, phonenumber))
             existing_user = cur.fetchone()
-
+            print(existing_user)
             if existing_user:
                 return render(request, "register.html", {'error_message': 'Email already in use. Please choose a different email.'})
 
@@ -111,7 +111,7 @@ def register(request):
                         VALUES (?, ?, ?, ?, ?, 2)""", (firstname, lastname, phonenumber, email, password))
             con.commit()
         finally:
-            con.close()
+            
             return redirect('signin')
         
     return render(request, "register.html")

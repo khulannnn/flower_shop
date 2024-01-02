@@ -11,58 +11,8 @@
 
 <div class="row">
 	<aside class="col-lg-9">
-<div class="card">
-<table class="table table-borderless table-shopping-cart">
-<thead class="text-muted">
-<tr class="small text-uppercase">
-  <th scope="col">Бараа</th>
-  <th scope="col" width="120">Тоо ширхэг</th>
-  <th scope="col" width="120">Үнэ</th>
-  <th scope="col" class="text-right" width="200"> </th>
-</tr>
-</thead>
-<tbody>
-	
-<tr id="buton">
-	<td>
-		<figure class="itemside align-items-center">
-			<div class="aside"><img src="{{img}}" class="img-sm"></div>
-			<figcaption class="info">
-				<a href="#" class="title text-dark">{{name}}</a>
-				<p class="text-muted small">Өнгө: {{color}} <br> Хэмжээ: {{size}}</p>
-			</figcaption>
-		</figure>
-	</td>
-	<td> 
-		<!-- col.// -->
-					<div class="col"> 
-						<div class="input-group input-spinner">
-							<div class="input-group-prepend">
-							<button class="btn btn-light" type="button" id="button-plus" onclick="plus()"> <i class="fa fa-minus"></i> </button>
-							</div>
-							<input type="text" class="form-control" id="num" value="1">
-							<div class="input-group-append">
-							<button class="btn btn-light" type="button" id="button-minus" onclick="minus()"> <i class="fa fa-plus"></i> </button>
-							</div>
-						</div> <!-- input-group.// -->
-					</div> <!-- col.// -->
-	</td>
-	<td> 
-		<div class="price-wrap"> 
-			<var class="price">{{price}}₮</var> 
-			<!-- <small class="text-muted"> $315.20 each </small>  -->
-		</div> <!-- price-wrap .// -->
-	</td>
-	<td class="text-right"> 
-		<form method="post">
-		{%csrf_token%}
-	<button type="submit" class="btn btn-danger" style="background-color:#2c3333; color:#F397AF;border:1px solid #F397AF"> <i class="fa fa-trash-o"></i></button>
-	</form>
-	</td>
-</tr>
+<div class="card" id="cart-container">
 
-</tbody>
-</table>
 </div> <!-- card.// -->
 
 	</aside> <!-- col.// -->
@@ -72,15 +22,15 @@
 		<div class="card-body">
 			<dl class="dlist-align">
 				<dt>Нийт үнэ:</dt>
-				<dd class="text-right">200000₮</dd>
+				<dd id="all-price" class="text-right">200000₮</dd>
 			  </dl>
 			  <dl class="dlist-align">
 				<dt>Хөнгөлөлт:</dt>
-				<dd class="text-right"> 100000₮</dd>
+				<dd id="coupon-price" class="text-right"> 100000₮</dd>
 			  </dl>
 			  <dl class="dlist-align">
 				<dt>Нийт:</dt>
-				<dd class="text-right text-dark b"><strong>985200₮</strong></dd>
+				<dd id="sell-price" class="text-right text-dark b"><strong>985200₮</strong></dd>
 			  </dl>
 			  <hr>
 			<a href="/place_order" class="btn btn-primary btn-block"> Тооцоо хийх </a>
@@ -97,19 +47,112 @@
 </div> <!-- container .//  -->
 </section>
 <script>
+	let cartData = localStorage.getItem('cart');
 
-	function plus() {
+	if (cartData) {
+		cartData = JSON.parse(cartData)
+
+		calculate();
+		cartData.map((data, index) => {
+			let cartItem = `<table class="table table-borderless table-shopping-cart">
+			<thead class="text-muted">
+			<tr class="small text-uppercase">
+			<th scope="col">Бараа</th>
+			<th scope="col" width="120">Тоо ширхэг</th>
+			<th scope="col" width="120">Үнэ</th>
+			<th scope="col" class="text-right" width="200"> </th>
+			</tr>
+			</thead>
+			<tbody>
+				
+			<tr id="buton">
+				<td>
+					<figure class="itemside align-items-center">
+						<div class="aside"><img src="${data.image}" class="img-sm"></div>
+						<figcaption class="info">
+							<a href="#" class="title text-dark">${data.product_name}</a>
+							<p class="text-muted small">Өнгө: {{color}} <br> Хэмжээ: {{size}}</p>
+						</figcaption>
+					</figure>
+				</td>
+				<td> 
+					<!-- col.// -->
+								<div class="col"> 
+									<div class="input-group input-spinner">
+										<div class="input-group-prepend">
+										<button class="btn btn-light" type="button" id="button-plus" onclick="plus(${index})"> <i class="fa fa-minus"></i> </button>
+										</div>
+										<input type="text" class="form-control" id="num" value="${data.count}">
+										<div class="input-group-append">
+										<button class="btn btn-light" type="button" id="button-minus" onclick="minus(${index})"> <i class="fa fa-plus"></i> </button>
+										</div>
+									</div> <!-- input-group.// -->
+								</div> <!-- col.// -->
+				</td>
+				<td> 
+					<div class="price-wrap"> 
+						<var class="price">${data.price}₮</var> 
+						<!-- <small class="text-muted"> $315.20 each </small>  -->
+					</div> <!-- price-wrap .// -->
+				</td>
+				<td class="text-right"> 
+					<form method="post">
+					{%csrf_token%}
+					<button type="button" onclick="remove(${index})" class="btn btn-danger" style="background-color:#2c3333; color:#F397AF;border:1px solid #F397AF"> <i class="fa fa-trash-o"></i></button>
+				</form>
+				</td>
+			</tr>
+
+			</tbody>
+			</table>`
+
+			const div = document.createElement('div');
+
+			div.innerHTML = cartItem;
+
+			document.getElementById('cart-container').appendChild(div);
+		})
+	}
+
+	function plus(i) {
         let x = parseInt(document.getElementById("num").value);
 		if (x > 1) {
-        document.getElementById("num").value = x - 1;
+			document.getElementById("num").value = x - 1;
+			cartData[i].count --;
 		}
+		
+		calculate();
     }
 
-    function minus() {
+    function minus(i) {
         let x = parseInt(document.getElementById("num").value);
         
-            document.getElementById("num").value = x + 1;
+        document.getElementById("num").value = x + 1;
+		cartData[i].count ++;
+		calculate();
     }
+
+	function remove(i) {
+		cartData.splice(i, 1);
+
+		localStorage.setItem('cart', JSON.stringify(cartData));
+
+		window.location.reload();
+	}
+
+	function calculate() {
+		let allPrice = 0;
+
+		cartData.map(item => {
+			allPrice += item.price * item.count;
+		});
+
+		localStorage.setItem('cart', JSON.stringify(cartData));
+
+		document.getElementById('all-price').innerHTML = allPrice + '₮';
+		document.getElementById('coupon-price').innerHTML = (allPrice / 100 * 10) + '₮';
+		document.getElementById('sell-price').innerHTML = (allPrice / 100 * 90) + '₮';
+	}
 </script>
 
 <!-- ========================= SECTION CONTENT END// ========================= -->
